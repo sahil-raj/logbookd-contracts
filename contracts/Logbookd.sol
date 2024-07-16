@@ -23,6 +23,7 @@ contract Logbookd is Ownable {
 
     //events
     event userRegistered(uint _usrId); //emit when user is registered
+    event searchResult(uint256[] _reArr); //emit when search is done
 
     //add new user
     //onlyOwner so that it can only be called by a single address when using with account abstraction
@@ -44,5 +45,36 @@ contract Logbookd is Ownable {
         emit userRegistered(userId - 1);
 
         return true;
+    }
+
+    //searching
+    //search by name
+    function searchByName(string calldata _name) public view returns (bool) {
+        uint256[] storage reArr;
+        for (uint i = 0; i <= userId; ++i) {
+            if (userData[i].name == _name) {
+                reArr.push(i);
+            }
+        }
+        if (reArr.length > 0) {
+            emit searchResult(reArr);
+            return true;
+        }
+        return false;
+    }
+
+    //search by batch no
+    function searchByBatch(uint8 _batch) public view returns (bool) {
+        uint256[] storage reArr;
+        for (uint i = 0; i <= userId; ++i) {
+            if (userData[i].batch == _batch) {
+                reArr.push(i);
+            }
+        }
+        if (reArr.length > 0) {
+            emit searchResult(reArr);
+            return true;
+        }
+        return false;
     }
 }
