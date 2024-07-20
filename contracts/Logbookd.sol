@@ -21,6 +21,8 @@ contract Logbookd is Ownable {
     //user data mapping
     mapping(uint256 => User) internal userData;
 
+    uint256[] private reArr;
+
     //events
     event userRegistered(uint _usrId); //emit when user is registered
     event searchResult(uint256[] _reArr); //emit when search is done
@@ -49,10 +51,13 @@ contract Logbookd is Ownable {
 
     //searching
     //search by name
-    function searchByName(string calldata _name) public view returns (bool) {
-        uint256[] storage reArr;
+    function searchByName(string calldata _name) public returns (bool) {
+        // uint256[] storage reArr;
         for (uint i = 0; i <= userId; ++i) {
-            if (userData[i].name == _name) {
+            if (
+                keccak256(abi.encodePacked(userData[i].name)) ==
+                keccak256(abi.encodePacked(_name))
+            ) {
                 reArr.push(i);
             }
         }
@@ -64,8 +69,8 @@ contract Logbookd is Ownable {
     }
 
     //search by batch no
-    function searchByBatch(uint8 _batch) public view returns (bool) {
-        uint256[] storage reArr;
+    function searchByBatch(uint8 _batch) public returns (bool) {
+        // uint256[] storage reArr;
         for (uint i = 0; i <= userId; ++i) {
             if (userData[i].batch == _batch) {
                 reArr.push(i);
